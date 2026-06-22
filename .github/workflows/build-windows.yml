@@ -1,9 +1,10 @@
 name: Build Windows EXE
 
 # Builds the Escape Room as a Windows standalone on a Windows runner so the
-# Gaussian Splatting DXC/D3D compute shaders compile correctly (game-ci's
-# Linux builder can't target DXC). Then wraps the build into a single Inno
-# Setup installer (with uninstaller) and attaches it to a GitHub Release.
+# Gaussian Splatting DXC/D3D compute shaders compile correctly (Unity can only
+# target DXC from the Windows editor). Unity is installed directly by changeset
+# to avoid relying on third-party setup actions. The build is then wrapped into
+# a single Inno Setup installer (with uninstaller) and attached to a Release.
 
 on:
   push:
@@ -15,6 +16,7 @@ jobs:
   build:
     name: Build Windows64
     runs-on: windows-latest
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,22 +29,30 @@ jobs:
           restore-keys: |
             Library-Win64-
 
-      - name: Setup Unity
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-version: 2022.3.47f1
+      - name: Install Unity 2022.3.47f1
+        shell: pwsh
+        run: |
+          $changeset = "88c277b85d21"
+          $url = "https://download.unity3d.com/download_unity/$changeset/Windows64EditorInstaller/UnitySetup64-2022.3.47f1.exe"
+          Write-Host "Downloading $url"
+          Invoke-WebRequest -Uri $url -OutFile UnitySetup64.exe
+          Write-Host "Installing Unity (silent)..."
+          Start-Process -FilePath .\UnitySetup64.exe -ArgumentList '/S','/D=C:\Unity2022' -Wait
+          "UNITY=C:\Unity2022\Editor\Unity.exe" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - name: Activate Unity
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-
-      - name: Build Unity (Windows64)
-        uses: kuler90/build-unity@v1
-        with:
-          build-target: Win64
-          build-path: build/EscapeRoom.exe
+      - name: Activate license & build
+        shell: pwsh
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          & "$env:UNITY" -batchmode -nographics -quit `
+            -projectPath "$PWD" `
+            -buildTarget Win64 `
+            -executeMethod CIBuild.BuildWindows `
+            -username "$env:UNITY_EMAIL" -password "$env:UNITY_PASSWORD" `
+            -logFile -
+          if ($LASTEXITCODE -ne 0) { Write-Error "Unity build failed ($LASTEXITCODE)"; exit $LASTEXITCODE }
 
       - name: Build installer (Inno Setup)
         run: iscc /DSourceDir=build installer.iss

@@ -1,0 +1,6 @@
+{
+    "name": "CIBuild",
+    "includePlatforms": [
+        "Editor"
+    ]
+}
