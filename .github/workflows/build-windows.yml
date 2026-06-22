@@ -1,0 +1,78 @@
+name: Build Windows EXE
+
+# Builds the Escape Room as a Windows standalone via game-ci,
+# wraps it into a single Inno Setup installer (with uninstaller),
+# and attaches the installer to a GitHub Release.
+
+on:
+  push:
+    tags:
+      - 'v*'          # build + release on version tags, e.g. v1.0.0
+  workflow_dispatch:   # allow manual runs from the Actions tab
+
+jobs:
+  build:
+    name: Build Windows64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true   # set to false if you don't use Git LFS
+
+      # Cache Library to speed up subsequent builds
+      - name: Cache Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-StandaloneWindows64-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-StandaloneWindows64-
+            Library-
+
+      - name: Build Unity project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 2022.3.47f1
+          targetPlatform: StandaloneWindows64
+          buildName: EscapeRoom
+
+      - name: Upload raw build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EscapeRoom-Windows64
+          path: build/StandaloneWindows64
+
+  package:
+    name: Package installer
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: EscapeRoom-Windows64
+          path: build
+
+      - name: Build installer (Inno Setup)
+        run: iscc /DSourceDir=build installer.iss
+        shell: cmd
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EscapeRoom-Installer
+          path: Output/*.exe
+
+      - name: Attach installer to Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Output/*.exe
