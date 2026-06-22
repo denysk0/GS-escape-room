@@ -40,6 +40,18 @@ jobs:
           Start-Process -FilePath .\UnitySetup64.exe -ArgumentList '/S','/D=C:\Unity2022' -Wait
           "UNITY=C:\Unity2022\Editor\Unity.exe" | Out-File -FilePath $env:GITHUB_ENV -Append
 
+      - name: Install Unity license file (.ulf)
+        shell: pwsh
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          $dir = "C:\ProgramData\Unity"
+          New-Item -ItemType Directory -Force -Path $dir | Out-Null
+          # Write the .ulf exactly as stored (no BOM, no added newlines, strip CR)
+          $ulf = $env:UNITY_LICENSE -replace "`r", ""
+          [System.IO.File]::WriteAllText("$dir\Unity_lic.ulf", $ulf)
+          Write-Host "Wrote $((Get-Item "$dir\Unity_lic.ulf").Length) bytes to $dir\Unity_lic.ulf"
+
       - name: Activate license & build
         shell: pwsh
         env:
