@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53ad4b5da4cf649f5b9a6d3dc7f1b4b7, type: 3}
+  m_Name: Assets-StreamingAssets-boxTop-point_cloud
+  m_EditorClassIdentifier: 
+  m_FormatVersion: 20231020
+  m_SplatCount: 50400
+  m_BoundsMin: {x: -0.541542, y: -0.050889, z: -0.53975207}
+  m_BoundsMax: {x: 0.53974414, y: 0.023998003, z: 0.54166}
+  m_DataHash:
+    serializedVersion: 2
+    Hash: 084aaee1215c9a53eb53031cb04cf1df
+  m_PosFormat: 1
+  m_ScaleFormat: 1
+  m_SHFormat: 2
+  m_ColorFormat: 1
+  m_PosData: {fileID: 4900000, guid: 8ba31eceab1184e47a1365f13c9b5cbd, type: 3}
+  m_ColorData: {fileID: 4900000, guid: 72f54c175df732349b6cd279187cafdd, type: 3}
+  m_OtherData: {fileID: 4900000, guid: 386d624be53f41743a95b7dc23f47277, type: 3}
+  m_SHData: {fileID: 4900000, guid: 8b310a7f14eb4ba46a2448edf2662404, type: 3}
+  m_ChunkData: {fileID: 4900000, guid: 059a95ea72184c44db53ca9a63a827b0, type: 3}
+  m_Cameras: []
+  m_ObjPath: mesh_boxTop
+  m_NumberOfSplatsPerFace: 45
+  m_AlphaData: {fileID: 4900000, guid: f4eb809144c73e14cac04f8625117a5b, type: 3}
+  m_ScaleData: {fileID: 4900000, guid: f72b659fc163789439a6300688845fd5, type: 3}
+  m_PointCloudPath: Assets/StreamingAssets/boxTop/point_cloud.ply
+  m_useMeshLeftHandedCS: 0

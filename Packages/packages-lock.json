@@ -204,14 +204,15 @@
       "url": "https://packages.unity.com"
     },
     "org.nesnausk.gaussian-splatting": {
-      "version": "file:../../../package",
+      "version": "https://github.com/denysk0/GS-Verse.git?path=/package#escape-room-v1",
       "depth": 0,
-      "source": "local",
+      "source": "git",
       "dependencies": {
         "com.unity.burst": "1.8.8",
         "com.unity.collections": "2.1.4",
         "com.unity.mathematics": "1.2.6"
-      }
+      },
+      "hash": "f25bbe1c0ee36ce4c4fd4902930a9254c40e6e79"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

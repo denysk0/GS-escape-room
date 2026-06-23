@@ -4393,7 +4393,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6598815579406187037, guid: 18ddb545287c546e19cc77dc9fbb2189, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4761,6 +4761,7 @@ MonoBehaviour:
   caseSensitive: 0
   redLight: {fileID: 0}
   greenLight: {fileID: 0}
+  ObjectRequiredToBeActiveForCodeToWork: {fileID: 0}
   onCorrectCode:
     m_PersistentCalls:
       m_Calls: []

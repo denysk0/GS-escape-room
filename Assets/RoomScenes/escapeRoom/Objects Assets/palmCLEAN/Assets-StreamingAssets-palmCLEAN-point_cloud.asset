@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53ad4b5da4cf649f5b9a6d3dc7f1b4b7, type: 3}
+  m_Name: Assets-StreamingAssets-palmCLEAN-point_cloud
+  m_EditorClassIdentifier: 
+  m_FormatVersion: 20231020
+  m_SplatCount: 157080
+  m_BoundsMin: {x: -0.47273862, y: -0.6702931, z: -0.520952}
+  m_BoundsMax: {x: 0.3964861, y: 0.67759407, z: 0.5350151}
+  m_DataHash:
+    serializedVersion: 2
+    Hash: 01b4b9d686c843fcb87c2e72370c4aa3
+  m_PosFormat: 1
+  m_ScaleFormat: 1
+  m_SHFormat: 2
+  m_ColorFormat: 1
+  m_PosData: {fileID: 4900000, guid: b16367915faac974ba32095c595913ce, type: 3}
+  m_ColorData: {fileID: 4900000, guid: 0774db9b363a0e2489ce99096093d603, type: 3}
+  m_OtherData: {fileID: 4900000, guid: 8aaa6dd08592962428c5b54b25a993aa, type: 3}
+  m_SHData: {fileID: 4900000, guid: 452a2ec2a49352947ac1b87bae58fa86, type: 3}
+  m_ChunkData: {fileID: 4900000, guid: fbe3b7166bddf2c4a8ee75697b187b07, type: 3}
+  m_Cameras: []
+  m_ObjPath: mesh_palmCLEAN
+  m_NumberOfSplatsPerFace: 10
+  m_AlphaData: {fileID: 4900000, guid: 02d13f92e03938246bff2a1392c52bbd, type: 3}
+  m_ScaleData: {fileID: 4900000, guid: aa56a751d80af0645aab1dd9d2e542f6, type: 3}
+  m_PointCloudPath: Assets/StreamingAssets/palmCLEAN/point_cloud.ply
+  m_useMeshLeftHandedCS: 0

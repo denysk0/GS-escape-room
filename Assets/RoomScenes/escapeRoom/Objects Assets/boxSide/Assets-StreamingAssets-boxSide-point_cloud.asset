@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53ad4b5da4cf649f5b9a6d3dc7f1b4b7, type: 3}
+  m_Name: Assets-StreamingAssets-boxSide-point_cloud
+  m_EditorClassIdentifier: 
+  m_FormatVersion: 20231020
+  m_SplatCount: 85910
+  m_BoundsMin: {x: -0.048306, y: -0.4374077, z: -0.543663}
+  m_BoundsMax: {x: 0.050074004, y: 0.4421292, z: 0.536467}
+  m_DataHash:
+    serializedVersion: 2
+    Hash: 41bb8fa9e7cb5a6c48d1cb9f348cebd4
+  m_PosFormat: 1
+  m_ScaleFormat: 1
+  m_SHFormat: 2
+  m_ColorFormat: 1
+  m_PosData: {fileID: 4900000, guid: a70e8da0ad40a8a45ae95be7c3253f43, type: 3}
+  m_ColorData: {fileID: 4900000, guid: 1ea340c2c18776d49a7a3ebcac51aa98, type: 3}
+  m_OtherData: {fileID: 4900000, guid: 548643bbe4a8af141bae6c1ff7e600de, type: 3}
+  m_SHData: {fileID: 4900000, guid: 2bdb6aa37cd02434283339263cc6873d, type: 3}
+  m_ChunkData: {fileID: 4900000, guid: 1033128ebc5875c45a0090583f23dbd9, type: 3}
+  m_Cameras: []
+  m_ObjPath: mesh_boxSide
+  m_NumberOfSplatsPerFace: 55
+  m_AlphaData: {fileID: 4900000, guid: 7d2703f090274374b9d8da7c9cb9735b, type: 3}
+  m_ScaleData: {fileID: 4900000, guid: e367fd7b8c537734a8f2a104918201fd, type: 3}
+  m_PointCloudPath: Assets/StreamingAssets/boxSide/point_cloud.ply
+  m_useMeshLeftHandedCS: 0
