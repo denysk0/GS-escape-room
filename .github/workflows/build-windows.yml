@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build (Unity, pre-activated local license)
-        shell: pwsh
+        shell: powershell
         run: |
           & "$env:UNITY" -batchmode -nographics -quit `
             -projectPath "$env:GITHUB_WORKSPACE" `
@@ -41,7 +41,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { Write-Error "Unity build failed ($LASTEXITCODE)"; exit $LASTEXITCODE }
 
       - name: Build installer (Inno Setup)
-        shell: pwsh
+        shell: powershell
         run: |
           & "$env:ISCC" /DSourceDir=build installer.iss
           if ($LASTEXITCODE -ne 0) { Write-Error "ISCC failed ($LASTEXITCODE)"; exit $LASTEXITCODE }
