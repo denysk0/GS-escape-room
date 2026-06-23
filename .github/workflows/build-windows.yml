@@ -35,16 +35,22 @@ jobs:
       - name: Build (Unity, pre-activated local license)
         shell: powershell
         run: |
-          # Log to a file rather than stdout: streaming with `-logFile -` crashes
-          # Unity early on the first import under the runner. Echo the log afterwards.
+          # Unity.exe is a GUI-subsystem app: invoking it with `&` and logging to a
+          # file (not stdout) does not block reliably and leaves $LASTEXITCODE empty.
+          # Start-Process -Wait -PassThru waits properly and returns the real ExitCode.
           $log = Join-Path $env:GITHUB_WORKSPACE 'unity_build.log'
-          & "$env:UNITY" -batchmode -nographics -quit `
-            -projectPath "$env:GITHUB_WORKSPACE" `
-            -buildTarget Win64 `
-            -executeMethod CIBuild.BuildWindows `
-            -logFile "$log"
-          $code = $LASTEXITCODE
+          if (Test-Path $log) { Remove-Item $log -Force }
+          $unityArgs = @(
+            '-batchmode','-nographics','-quit',
+            '-projectPath', "$env:GITHUB_WORKSPACE",
+            '-buildTarget','Win64',
+            '-executeMethod','CIBuild.BuildWindows',
+            '-logFile', "$log"
+          )
+          $p = Start-Process -FilePath "$env:UNITY" -ArgumentList $unityArgs -Wait -PassThru -NoNewWindow
+          $code = $p.ExitCode
           if (Test-Path $log) { Get-Content $log }
+          Write-Host "Unity exit code: $code"
           if ($code -ne 0) { Write-Error "Unity build failed ($code)"; exit $code }
 
       - name: Build installer (Inno Setup)
