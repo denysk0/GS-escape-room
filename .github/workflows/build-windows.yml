@@ -1,10 +1,13 @@
 name: Build Windows EXE
 
-# Builds the Escape Room as a Windows standalone on a Windows runner so the
-# Gaussian Splatting DXC/D3D compute shaders compile correctly (Unity can only
-# target DXC from the Windows editor). Unity is installed directly by changeset
-# to avoid relying on third-party setup actions. The build is then wrapped into
-# a single Inno Setup installer (with uninstaller) and attached to a Release.
+# Builds the Escape Room as a Windows standalone on a self-hosted Windows runner
+# (machine "denyak"). The Gaussian Splatting DXC/D3D compute shaders only compile
+# from the Windows editor, and the free Unity Personal license is bound to this
+# machine / the aladi user session, so a self-hosted runner is the only way to
+# produce a correct build on the free tier. Unity 2022.3.47f1 is pre-installed via
+# the Hub; the runner service runs as the aladi account so Unity's per-user
+# licensing client is reachable. The build is wrapped into a single Inno Setup
+# installer (with uninstaller) and attached to a Release.
 
 on:
   push:
@@ -12,59 +15,36 @@ on:
       - 'v*'          # build + release on version tags, e.g. v1.0.0
   workflow_dispatch:   # allow manual runs from the Actions tab
 
+permissions:
+  contents: write      # needed to attach the installer to a GitHub Release
+
 jobs:
   build:
     name: Build Windows64
-    runs-on: windows-latest
-    timeout-minutes: 90
+    runs-on: [self-hosted, windows, unity2022]
+    timeout-minutes: 120
+    env:
+      UNITY: 'C:\Program Files\Unity\Hub\Editor\2022.3.47f1\Editor\Unity.exe'
+      ISCC: 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache Library
-        uses: actions/cache@v4
-        with:
-          path: Library
-          key: Library-Win64-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-Win64-
-
-      - name: Install Unity 2022.3.47f1
-        shell: pwsh
-        run: |
-          $changeset = "88c277b85d21"
-          $url = "https://download.unity3d.com/download_unity/$changeset/Windows64EditorInstaller/UnitySetup64-2022.3.47f1.exe"
-          Write-Host "Downloading $url"
-          Invoke-WebRequest -Uri $url -OutFile UnitySetup64.exe
-          Write-Host "Installing Unity (silent)..."
-          Start-Process -FilePath .\UnitySetup64.exe -ArgumentList '/S','/D=C:\Unity2022' -Wait
-          "UNITY=C:\Unity2022\Editor\Unity.exe" | Out-File -FilePath $env:GITHUB_ENV -Append
-
-      - name: Install Unity license file (.ulf)
-        shell: pwsh
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-        run: |
-          $dir = "C:\ProgramData\Unity"
-          New-Item -ItemType Directory -Force -Path $dir | Out-Null
-          # Write the .ulf exactly as stored (no BOM, no added newlines, strip CR)
-          $ulf = $env:UNITY_LICENSE -replace "`r", ""
-          [System.IO.File]::WriteAllText("$dir\Unity_lic.ulf", $ulf)
-          Write-Host "Wrote $((Get-Item "$dir\Unity_lic.ulf").Length) bytes to $dir\Unity_lic.ulf"
-
-      - name: Build (offline license)
+      - name: Build (Unity, pre-activated local license)
         shell: pwsh
         run: |
           & "$env:UNITY" -batchmode -nographics -quit `
-            -projectPath "$PWD" `
+            -projectPath "$env:GITHUB_WORKSPACE" `
             -buildTarget Win64 `
             -executeMethod CIBuild.BuildWindows `
             -logFile -
           if ($LASTEXITCODE -ne 0) { Write-Error "Unity build failed ($LASTEXITCODE)"; exit $LASTEXITCODE }
 
       - name: Build installer (Inno Setup)
-        run: iscc /DSourceDir=build installer.iss
-        shell: cmd
+        shell: pwsh
+        run: |
+          & "$env:ISCC" /DSourceDir=build installer.iss
+          if ($LASTEXITCODE -ne 0) { Write-Error "ISCC failed ($LASTEXITCODE)"; exit $LASTEXITCODE }
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
