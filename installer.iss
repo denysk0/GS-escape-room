@@ -38,8 +38,11 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional icons:"
 
 [Files]
-; Recursively include the whole build folder
-Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
+; Recursively include the whole build folder, but skip Unity's Burst debug
+; symbols ("*_DoNotShip") — they are debug-only and must not ship to users.
+Source: "{#SourceDir}\*"; DestDir: "{app}"; \
+  Excludes: "*_BurstDebugInformation_DoNotShip,*_BurstDebugInformation_DoNotShip\*"; \
+  Flags: recursesubdirs createallsubdirs ignoreversion
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExe}"
