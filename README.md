@@ -3,6 +3,14 @@
 VR escape room built on the [GS-Verse](https://github.com/Anastasiya999/GS-Verse) Gaussian Splatting engine.
 Unity **2022.3.47f1**, OpenXR + XR Interaction Toolkit.
 
+## Screenshots
+
+![Escape room with the Fibonacci puzzle and palm](docs/screenshots/01-fibonacci-room.png)
+
+![Desk with the faculty banner and a keypad puzzle](docs/screenshots/02-desk-banner.png)
+
+![Shelf with the safe puzzle and crate](docs/screenshots/03-shelf-safe.png)
+
 ## Engine dependency
 
 The engine is **not** vendored here, it's pulled as a UPM git package in
