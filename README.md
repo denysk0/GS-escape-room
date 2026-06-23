@@ -22,7 +22,7 @@ Once that PR is merged, switch the URL to
 ### Why Windows-only / self-hosted
 
 The Gaussian Splatting shaders are compiled with DXC, and Unity can only target
-D3D with DXC **from the Windows editor** — a Linux CI runner produces broken
+D3D with DXC **from the Windows editor**, so a Linux CI runner produces broken
 splats. A free Unity **Personal** license also can't be activated on GitHub's
 hosted Windows runners (it's machine/user-bound). So builds run on a **self-hosted
 Windows runner** with Unity already installed and the Personal license activated.
@@ -36,7 +36,7 @@ installer ([`installer.iss`](installer.iss)) with an uninstaller, and attaches
 `EscapeRoom-Setup-*.exe` to the GitHub Release. `workflow_dispatch` does the same
 but uploads the installer as a run artifact instead of releasing.
 
-The runner needs no license secrets — it uses the Unity license already activated
+The runner needs no license secrets; it uses the Unity license already activated
 on that machine.
 
 ### Build it yourself (locally on Windows)
@@ -44,8 +44,8 @@ on that machine.
 Prerequisites:
 - **Unity 2022.3.47f1** (changeset `88c277b85d21`), installed via Unity Hub with
   the **Windows Build Support** module.
-- A Unity account with an activated **Personal** license (Hub → Preferences →
-  Licenses → *Add* → *Get a free personal license*).
+- A Unity account with an activated **Personal** license (in Unity Hub, open
+  Preferences, Licenses, Add, then "Get a free personal license").
 - [**Inno Setup 6**](https://jrsoftware.org/isdl.php) (for the installer step).
 
 Steps:
@@ -53,8 +53,8 @@ Steps:
 1. Clone this repo and open it in Unity once. The engine package is pulled
    automatically from the git URL in `Packages/manifest.json` (first import takes
    a while).
-2. Build the Windows player — either from the editor (*File → Build Settings →
-   Windows → Build*) or headless:
+2. Build the Windows player, either from the editor (File menu, Build Settings,
+   select Windows, Build) or headless:
 
    ```powershell
    & "C:\Program Files\Unity\Hub\Editor\2022.3.47f1\Editor\Unity.exe" `
@@ -73,7 +73,7 @@ Steps:
 
    The single-file installer lands in `Output\EscapeRoom-Setup-1.0.0.exe`.
 
-> The raw `build\` folder is not a standalone `.exe` — Unity always ships
+> The raw `build\` folder is not a standalone `.exe`. Unity always ships
 > `EscapeRoom.exe` alongside `EscapeRoom_Data\` and `UnityPlayer.dll`. Ship the
 > installer, not the loose files.
 
