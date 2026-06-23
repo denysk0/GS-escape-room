@@ -25,7 +25,6 @@ jobs:
     timeout-minutes: 120
     env:
       UNITY: 'C:\Program Files\Unity\Hub\Editor\2022.3.47f1\Editor\Unity.exe'
-      ISCC: 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,7 +55,14 @@ jobs:
       - name: Build installer (Inno Setup)
         shell: powershell
         run: |
-          & "$env:ISCC" /DSourceDir=build installer.iss
+          # winget installs Inno Setup per-user under %LOCALAPPDATA%; fall back to the
+          # machine-wide Program Files location too.
+          $iscc = @(
+            (Join-Path $env:LOCALAPPDATA 'Programs\Inno Setup 6\ISCC.exe'),
+            'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $iscc) { Write-Error 'ISCC.exe not found'; exit 1 }
+          & "$iscc" /DSourceDir=build installer.iss
           if ($LASTEXITCODE -ne 0) { Write-Error "ISCC failed ($LASTEXITCODE)"; exit $LASTEXITCODE }
 
       - name: Upload installer artifact
